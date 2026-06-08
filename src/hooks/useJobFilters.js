@@ -2,8 +2,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getJobs } from '../services/jobService';
 import { getInternships } from '../services/internshipService';
 import { getHackathons } from '../services/hackathonService';
+import { getGovernmentJobs } from '../services/governmentJobService';
 import { globalSearch } from '../services/searchService';
-import { mergeOpportunities, mapJobToCard, mapHackathonToCard } from '../utils/mapOpportunity';
+import { mergeOpportunities, mapJobToCard, mapHackathonToCard, mapGovernmentJobToCard } from '../utils/mapOpportunity';
 
 const ITEMS_PER_PAGE = 5;
 
@@ -28,7 +29,12 @@ export function useJobFilters() {
           q: searchQuery,
           category: activeCategory !== 'all' ? activeCategory : undefined,
         });
-        merged = mergeOpportunities(data.data.jobs, data.data.internships, data.data.hackathons);
+        merged = mergeOpportunities(
+          data.data.jobs,
+          data.data.internships,
+          data.data.hackathons,
+          data.data.governmentJobs || []
+        );
       } else if (activeCategory === 'internship') {
         const [jobsRes, internRes] = await Promise.all([
           getJobs({ category: 'internship', limit: 50 }),
@@ -38,13 +44,22 @@ export function useJobFilters() {
       } else if (activeCategory === 'hackathon') {
         const { data } = await getHackathons({ limit: 50 });
         merged = data.data.map(mapHackathonToCard);
+      } else if (activeCategory === 'government') {
+        const { data } = await getGovernmentJobs({ limit: 50 });
+        merged = data.data.map(mapGovernmentJobToCard);
       } else if (activeCategory === 'all') {
-        const [jobsRes, internRes, hackRes] = await Promise.all([
+        const [jobsRes, internRes, hackRes, govRes] = await Promise.all([
           getJobs({ limit: 50 }),
           getInternships({ limit: 50 }),
           getHackathons({ limit: 50 }),
+          getGovernmentJobs({ limit: 50 }),
         ]);
-        merged = mergeOpportunities(jobsRes.data.data, internRes.data.data, hackRes.data.data);
+        merged = mergeOpportunities(
+          jobsRes.data.data,
+          internRes.data.data,
+          hackRes.data.data,
+          govRes.data.data
+        );
       } else {
         const { data } = await getJobs({ category: activeCategory, limit: 50 });
         merged = data.data.map(mapJobToCard);

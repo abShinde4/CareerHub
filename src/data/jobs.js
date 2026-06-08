@@ -207,9 +207,3 @@ export const JOBS = [
     postedAt: '5 days ago',
   },
 ];
-
-export const FLOATING_CARDS = [
-  { title: 'Google SWE', company: 'Google', salary: '₹40 LPA' },
-  { title: 'MS Intern', company: 'Microsoft', salary: '₹80K/mo' },
-  { title: 'Zoho Dev', company: 'Zoho', salary: '₹12 LPA' },
-];

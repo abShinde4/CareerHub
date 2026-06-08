@@ -13,6 +13,7 @@ export default function JobCards({ jobs, bookmarks, onBookmark, loading }) {
       job: `/job/${job.id}`,
       internship: `/internship/${job.id}`,
       hackathon: `/hackathon/${job.id}`,
+      government: `/government-job/${job.id}`,
     };
     navigate(routes[job.opportunityType] || `/job/${job.id}`);
   };

@@ -15,7 +15,7 @@ export default function Stats() {
           { value: formatStat(s.jobs), label: 'Job Opportunities' },
           { value: formatStat(s.internships), label: 'Internships' },
           { value: formatStat(s.companies), label: 'Companies' },
-          { value: formatStat(s.hackathons), label: 'Hackathons' },
+          { value: formatStat(s.hackathons + (s.governmentJobs || 0)), label: 'Opportunities' },
         ]);
       })
       .catch(() => {});

@@ -1,19 +1,20 @@
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { FiMail } from 'react-icons/fi';
 import { FaTelegram, FaWhatsapp, FaInstagram, FaYoutube } from 'react-icons/fa';
 import { TRENDING_SEARCHES } from '../../data/jobs';
-import { useToast } from '../../context/useToast';
+import { useSocialLinks } from '../../context/useSocialLinks';
 import NewsletterForm from '../ui/NewsletterForm';
 
-const SOCIAL_LINKS = [
-  { name: 'Telegram', icon: FaTelegram, color: 'bg-sky-500 hover:bg-sky-600', href: '#' },
-  { name: 'WhatsApp', icon: FaWhatsapp, color: 'bg-green-500 hover:bg-green-600', href: '#' },
-  { name: 'Instagram', icon: FaInstagram, color: 'bg-pink-500 hover:bg-pink-600', href: '#' },
-  { name: 'YouTube', icon: FaYoutube, color: 'bg-red-500 hover:bg-red-600', href: '#' },
-];
-
 export default function RightSidebar({ onTrendingClick }) {
-  const { addToast } = useToast();
+  const links = useSocialLinks();
+
+  const SOCIAL_LINKS = [
+    { name: 'Telegram', icon: FaTelegram, color: 'bg-sky-500 hover:bg-sky-600', href: links.telegram },
+    { name: 'WhatsApp', icon: FaWhatsapp, color: 'bg-green-500 hover:bg-green-600', href: links.whatsapp },
+    { name: 'Instagram', icon: FaInstagram, color: 'bg-pink-500 hover:bg-pink-600', href: links.instagram },
+    { name: 'YouTube', icon: FaYoutube, color: 'bg-red-500 hover:bg-red-600', href: links.youtube || 'https://www.youtube.com/@ArmanShinde' },
+  ].filter((s) => s.href);
 
   return (
     <aside className="hidden xl:block w-72 shrink-0 space-y-5">
@@ -50,12 +51,10 @@ export default function RightSidebar({ onTrendingClick }) {
               <motion.a
                 key={social.name}
                 href={social.href}
+                target="_blank"
+                rel="noopener noreferrer"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  addToast(`Opening ${social.name}...`, 'info');
-                }}
                 className={`flex items-center justify-center gap-2 px-3 py-2.5 rounded-2xl text-white text-sm font-semibold ${social.color} transition-colors`}
               >
                 <social.icon size={18} />
@@ -63,6 +62,19 @@ export default function RightSidebar({ onTrendingClick }) {
               </motion.a>
             ))}
           </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.15 }}
+          className="glass dark:glass-dark rounded-3xl p-5 shadow-soft"
+        >
+          <h3 className="font-bold text-gray-900 dark:text-white mb-3">Government Jobs</h3>
+          <Link to="/government-jobs" className="text-sm text-primary-600 hover:text-primary-700 font-medium">
+            View all government notifications →
+          </Link>
         </motion.div>
 
         <motion.div

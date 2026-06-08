@@ -30,6 +30,7 @@ export default function DetailPageLayout({
       job: `/job/${item.id}`,
       internship: `/internship/${item.id}`,
       hackathon: `/hackathon/${item.id}`,
+      government: `/government-job/${item.id}`,
     };
     navigate(routes[item.opportunityType] || `/job/${item.id}`);
   };

@@ -1,4 +1,3 @@
-import { Helmet } from 'react-helmet-async';
 import { useTheme } from '../context/useTheme';
 import { useJobFilters } from '../hooks/useJobFilters';
 import Navbar from '../components/layout/Navbar';
@@ -8,6 +7,8 @@ import LeftSidebar from '../components/layout/LeftSidebar';
 import RightSidebar from '../components/layout/RightSidebar';
 import JobList from '../components/sections/JobList';
 import Footer from '../components/layout/Footer';
+import YouTubeSection from '../components/sections/YouTubeSection';
+import SEO from '../components/ui/SEO';
 
 export default function HomePage() {
   const { darkMode } = useTheme();
@@ -33,20 +34,11 @@ export default function HomePage() {
 
   return (
     <>
-      <Helmet>
-        <title>CareerHub - Find Jobs, Internships & Opportunities</title>
-        <meta
-          name="description"
-          content="CareerHub - Daily updates of latest jobs, internships, hackathons and career opportunities from top companies."
-        />
-        <meta property="og:title" content="CareerHub - Find Jobs, Internships & Opportunities" />
-        <meta
-          property="og:description"
-          content="Discover 10K+ job opportunities, 2K+ internships, and 50+ hackathons. Your career starts here."
-        />
-        <meta property="og:type" content="website" />
-        <link rel="canonical" href="https://careerhub.com" />
-      </Helmet>
+      <SEO
+        title="CareerHub - Find Jobs, Internships & Opportunities"
+        description="Daily updates of latest jobs, internships, hackathons and career opportunities from top companies."
+        path="/"
+      />
 
       <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'gradient-bg-dark text-gray-100' : 'gradient-bg text-gray-900'}`}>
         <Navbar searchQuery={searchQuery} onSearch={setSearchQuery} />
@@ -79,6 +71,7 @@ export default function HomePage() {
               <RightSidebar onTrendingClick={handleTrendingClick} />
             </div>
           </div>
+          <YouTubeSection />
         </main>
 
         <Footer />

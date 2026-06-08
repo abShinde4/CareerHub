@@ -62,11 +62,28 @@ export const mapHackathonToCard = (hackathon) => ({
   createdAt: hackathon.createdAt,
 });
 
-export const mergeOpportunities = (jobs = [], internships = [], hackathons = []) => {
+export const mapGovernmentJobToCard = (job) => ({
+  id: job._id,
+  title: job.title,
+  company: job.department,
+  logo: job.image || favicon(job.department),
+  location: job.location,
+  salary: job.salary || 'As per rules',
+  experience: job.qualification || 'See notification',
+  type: 'Government',
+  category: 'government',
+  postedAt: timeAgo(job.createdAt),
+  opportunityType: 'government',
+  applyLink: job.officialWebsite,
+  createdAt: job.createdAt,
+});
+
+export const mergeOpportunities = (jobs = [], internships = [], hackathons = [], govJobs = []) => {
   const merged = [
     ...jobs.map(mapJobToCard),
     ...internships.map(mapInternshipToCard),
     ...hackathons.map(mapHackathonToCard),
+    ...govJobs.map(mapGovernmentJobToCard),
   ];
   return merged.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 };

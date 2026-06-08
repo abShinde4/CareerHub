@@ -7,7 +7,8 @@
     "start": "node server.js",
     "seed": "node utils/seedAdmin.js",
     "seed:admin": "node seedAdmin.js",
-    "seed:data": "node utils/seedData.js"
+    "seed:data": "node utils/seedData.js",
+    "seed:cms": "node utils/seedCMS.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",

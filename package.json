@@ -12,7 +12,8 @@
     "server:dev": "node --watch backend/server.js",
     "seed": "node backend/utils/seedAdmin.js",
     "seed:admin": "node backend/seedAdmin.js",
-    "seed:data": "node backend/utils/seedData.js"
+    "seed:data": "node backend/utils/seedData.js",
+    "seed:cms": "node backend/utils/seedCMS.js"
   },
   "dependencies": {
     "axios": "^1.17.0",

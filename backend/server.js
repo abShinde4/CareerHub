@@ -11,6 +11,12 @@ import hackathonRoutes from './routes/hackathonRoutes.js';
 import subscriberRoutes from './routes/subscriberRoutes.js';
 import searchRoutes from './routes/searchRoutes.js';
 import statsRoutes from './routes/statsRoutes.js';
+import talentRoutes from './routes/talentRoutes.js';
+import announcementRoutes from './routes/announcementRoutes.js';
+import heroHighlightRoutes from './routes/heroHighlightRoutes.js';
+import socialLinksRoutes from './routes/socialLinksRoutes.js';
+import governmentJobRoutes from './routes/governmentJobRoutes.js';
+import analyticsRoutes from './routes/analyticsRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -29,6 +35,12 @@ app.use('/api/subscribers', subscriberRoutes);
 app.use('/api/subscribe', subscriberRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/stats', statsRoutes);
+app.use('/api/talent-community', talentRoutes);
+app.use('/api/announcements', announcementRoutes);
+app.use('/api/hero-highlights', heroHighlightRoutes);
+app.use('/api/social-links', socialLinksRoutes);
+app.use('/api/government-jobs', governmentJobRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

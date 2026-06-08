@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiMenu, FiX, FiMoon, FiSun } from 'react-icons/fi';
 import { HiOutlineBriefcase } from 'react-icons/hi2';
@@ -6,7 +7,6 @@ import { useTheme } from '../../context/useTheme';
 import SearchBar from '../ui/SearchBar';
 import Button from '../ui/Button';
 import SubscribeModal from '../ui/SubscribeModal';
-import { useToast } from '../../context/useToast';
 
 const NAV_LINKS = [
   'Home',
@@ -22,12 +22,14 @@ export default function Navbar({ searchQuery, onSearch }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [subscribeOpen, setSubscribeOpen] = useState(false);
   const { darkMode, toggleTheme } = useTheme();
-  const { addToast } = useToast();
+  const navigate = useNavigate();
 
   const handleNavClick = (link) => {
     setMobileOpen(false);
-    if (link !== 'Home') {
-      addToast(`Navigating to ${link}...`, 'info');
+    if (link === 'Home') {
+      navigate('/');
+    } else {
+      navigate(`/#${link.toLowerCase()}`);
     }
   };
 
@@ -53,31 +55,30 @@ export default function Navbar({ searchQuery, onSearch }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 lg:h-[72px] gap-4">
             {/* Logo */}
-            <motion.a
-              href="#"
-              className="flex items-center gap-2.5 shrink-0"
-              whileHover={{ scale: 1.02 }}
-            >
+          <Link
+            to="/"
+            className="flex items-center gap-2.5 shrink-0"
+          >
               <div className="w-9 h-9 rounded-xl bg-linear-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-md shadow-primary-600/30">
                 <HiOutlineBriefcase className="text-white" size={20} />
               </div>
               <span className="text-xl font-extrabold text-gray-900 dark:text-white">
                 Career<span className="text-primary-600">Hub</span>
               </span>
-            </motion.a>
+            </Link>
 
             {/* Desktop Nav */}
             <div className="hidden xl:flex items-center gap-1">
-              {NAV_LINKS.map((link) => (
-                <a
-                  key={link}
-                  href={`#${link.toLowerCase()}`}
-                  onClick={() => handleNavClick(link)}
-                  className="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all duration-200"
-                >
-                  {link}
-                </a>
-              ))}
+            {NAV_LINKS.map((link) => (
+              <button
+                key={link}
+                type="button"
+                onClick={() => handleNavClick(link)}
+                className="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all duration-200"
+              >
+                {link}
+              </button>
+            ))}
             </div>
 
             {/* Search - Desktop */}
@@ -132,16 +133,16 @@ export default function Navbar({ searchQuery, onSearch }) {
               <div className="px-4 py-4 space-y-3">
                 <SearchBar value={searchQuery} onChange={onSearch} size="sm" />
                 <div className="grid grid-cols-2 gap-2">
-                  {NAV_LINKS.map((link) => (
-                    <a
-                      key={link}
-                      href={`#${link.toLowerCase()}`}
-                      onClick={() => handleNavClick(link)}
-                      className="px-3 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors text-center"
-                    >
-                      {link}
-                    </a>
-                  ))}
+                {NAV_LINKS.map((link) => (
+                  <button
+                    key={link}
+                    type="button"
+                    onClick={() => handleNavClick(link)}
+                    className="px-3 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors text-center"
+                  >
+                    {link}
+                  </button>
+                ))}
                 </div>
                 <Button size="sm" className="w-full" onClick={handleGetUpdates}>
                   🔔 Get Daily Updates
