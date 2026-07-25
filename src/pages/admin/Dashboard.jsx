@@ -22,7 +22,7 @@ export default function Dashboard() {
     { label: 'Total Hackathons', value: stats.totalHackathons, color: 'bg-orange-500' },
     { label: 'Government Jobs', value: stats.totalGovernmentJobs, color: 'bg-teal-500' },
     { label: 'Subscribers', value: stats.totalSubscribers, color: 'bg-green-500' },
-    { label: 'Total Visitors', value: stats.totalVisitors, color: 'bg-indigo-500' },
+    { label: 'Public Visitors', value: stats.totalVisitors, color: 'bg-indigo-500' },
     { label: "Today's Visitors", value: stats.todayVisitors, color: 'bg-pink-500' },
     { label: 'Unique Visitors', value: stats.uniqueVisitors, color: 'bg-amber-500' },
   ];

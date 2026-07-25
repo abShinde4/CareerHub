@@ -38,16 +38,17 @@ export default function AnalyticsPage() {
   if (!data) return <div className="text-gray-500">Loading analytics...</div>;
 
   const cards = [
-    { label: 'Total Visitors', value: data.totalVisitors, color: 'bg-blue-500' },
-    { label: "Today's Visitors", value: data.todayVisitors, color: 'bg-green-500' },
-    { label: 'Weekly Visitors', value: data.weeklyVisitors, color: 'bg-purple-500' },
-    { label: 'Monthly Visitors', value: data.monthlyVisitors, color: 'bg-orange-500' },
-    { label: 'Unique Visitors', value: data.uniqueVisitors, color: 'bg-pink-500' },
+    { label: 'Total Public Visitors', value: data.totalVisitors, color: 'bg-blue-500' },
+    { label: "Today's Public Visitors", value: data.todayVisitors, color: 'bg-green-500' },
+    { label: 'Weekly Public Visitors', value: data.weeklyVisitors, color: 'bg-purple-500' },
+    { label: 'Monthly Public Visitors', value: data.monthlyVisitors, color: 'bg-orange-500' },
+    { label: 'Unique Public Visitors', value: data.uniqueVisitors, color: 'bg-pink-500' },
   ];
 
   return (
     <div>
-      <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-6">Analytics</h1>
+      <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Analytics</h1>
+      <p className="text-sm text-gray-500 mb-6">Public website visitors only — admin panel visits are excluded.</p>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-8">
         {cards.map((c) => <StatCard key={c.label} {...c} />)}
       </div>
@@ -62,7 +63,7 @@ export default function AnalyticsPage() {
           <BarChart data={data.deviceStats.map((d) => ({ device: d.device, count: d.count }))} labelKey="device" valueKey="count" />
         </div>
         <div className="bg-white rounded-2xl p-4 sm:p-6 border border-gray-100 lg:col-span-2">
-          <h2 className="font-bold text-gray-900 mb-4">Most Visited Pages</h2>
+          <h2 className="font-bold text-gray-900 mb-4">Most Visited Public Pages</h2>
           <div className="space-y-2">
             {data.topPages.map((p) => (
               <div key={p.page} className="flex justify-between items-center py-2 border-b border-gray-50 text-sm">

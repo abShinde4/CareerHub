@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import PageTracker from './components/PageTracker';
+import NamedVisitorTracker from './components/NamedVisitorTracker';
+import WelcomeModal from './components/ui/WelcomeModal';
 import HomePage from './pages/HomePage';
 import JobDetailPage from './pages/JobDetailPage';
 import InternshipDetailPage from './pages/InternshipDetailPage';
@@ -12,6 +14,11 @@ import PrivacyPolicyPage from './pages/static/PrivacyPolicyPage';
 import TermsPage from './pages/static/TermsPage';
 import CareersPage from './pages/static/CareersPage';
 import DisclaimerPage from './pages/static/DisclaimerPage';
+import AiToolsPage from './pages/ai/AiToolsPage';
+import CareerChatPage from './pages/ai/CareerChatPage';
+import ResumeReviewPage from './pages/ai/ResumeReviewPage';
+import AtsScorePage from './pages/ai/AtsScorePage';
+import CoverLetterPage from './pages/ai/CoverLetterPage';
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminLayout from './components/admin/AdminLayout';
 import ProtectedRoute from './components/admin/ProtectedRoute';
@@ -24,6 +31,7 @@ import AnnouncementsManagement from './pages/admin/AnnouncementsManagement';
 import HeroHighlightsManagement from './pages/admin/HeroHighlightsManagement';
 import SocialLinksManagement from './pages/admin/SocialLinksManagement';
 import AnalyticsPage from './pages/admin/AnalyticsPage';
+import VisitorsManagement from './pages/admin/VisitorsManagement';
 import SubscribersManagement from './pages/admin/SubscribersManagement';
 import Settings from './pages/admin/Settings';
 
@@ -31,6 +39,8 @@ export default function App() {
   return (
     <BrowserRouter>
       <PageTracker />
+      <NamedVisitorTracker />
+      <WelcomeModal />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/job/:id" element={<JobDetailPage />} />
@@ -44,6 +54,11 @@ export default function App() {
         <Route path="/terms-and-conditions" element={<TermsPage />} />
         <Route path="/careers" element={<CareersPage />} />
         <Route path="/disclaimer" element={<DisclaimerPage />} />
+        <Route path="/ai-tools" element={<AiToolsPage />} />
+        <Route path="/ai-tools/career-chat" element={<CareerChatPage />} />
+        <Route path="/ai-tools/resume-review" element={<ResumeReviewPage />} />
+        <Route path="/ai-tools/ats-score" element={<AtsScorePage />} />
+        <Route path="/ai-tools/cover-letter" element={<CoverLetterPage />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
           <Route index element={<Dashboard />} />
@@ -55,6 +70,7 @@ export default function App() {
           <Route path="hero-highlights" element={<HeroHighlightsManagement />} />
           <Route path="social-links" element={<SocialLinksManagement />} />
           <Route path="analytics" element={<AnalyticsPage />} />
+          <Route path="visitors" element={<VisitorsManagement />} />
           <Route path="subscribers" element={<SubscribersManagement />} />
           <Route path="settings" element={<Settings />} />
         </Route>

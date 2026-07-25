@@ -17,9 +17,14 @@ import heroHighlightRoutes from './routes/heroHighlightRoutes.js';
 import socialLinksRoutes from './routes/socialLinksRoutes.js';
 import governmentJobRoutes from './routes/governmentJobRoutes.js';
 import analyticsRoutes from './routes/analyticsRoutes.js';
+import aiRoutes from './routes/aiRoutes.js';
+import namedVisitorRoutes from './routes/namedVisitorRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+console.log('ENV KEY:', process.env.GEMINI_API_KEY ? `set (${process.env.GEMINI_API_KEY.length} chars)` : undefined);
+console.log('ENV MODEL:', process.env.GEMINI_MODEL || undefined);
 
 app.use(cors());
 app.use(express.json());
@@ -41,6 +46,8 @@ app.use('/api/hero-highlights', heroHighlightRoutes);
 app.use('/api/social-links', socialLinksRoutes);
 app.use('/api/government-jobs', governmentJobRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/visitors', namedVisitorRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

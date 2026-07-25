@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import AdminTable, { AdminPageHeader } from '../../components/admin/AdminTable';
 import {
   adminGetHackathons,
@@ -8,6 +8,7 @@ import {
   publishHackathon,
   draftHackathon,
 } from '../../services/hackathonService';
+import { parseListResponse } from '../../utils/parseListResponse';
 
 const emptyForm = {
   title: '', organizer: '', prizePool: '', registrationLink: '', lastDate: '', description: '', status: 'draft',
@@ -21,12 +22,20 @@ export default function HackathonsManagement() {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
+  const requestRef = useRef(0);
 
   const fetchItems = useCallback(() => {
-    adminGetHackathons({ page, limit: 10, search }).then(({ data }) => {
-      setItems(data.data);
-      setPagination(data.pagination);
-    });
+    const requestId = ++requestRef.current;
+    adminGetHackathons({ page, limit: 10, search })
+      .then((response) => {
+        const parsed = parseListResponse(response, requestId, requestRef.current);
+        if (!parsed) return;
+        setItems(parsed.items);
+        setPagination(parsed.pagination);
+      })
+      .catch(() => {
+        if (requestId !== requestRef.current) return;
+      });
   }, [page, search]);
 
   useEffect(() => { fetchItems(); }, [fetchItems]);

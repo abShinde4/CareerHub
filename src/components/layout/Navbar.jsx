@@ -79,6 +79,12 @@ export default function Navbar({ searchQuery, onSearch }) {
                 {link}
               </button>
             ))}
+            <Link
+              to="/ai-tools"
+              className="px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all duration-200"
+            >
+              ✨ AI Tools
+            </Link>
             </div>
 
             {/* Search - Desktop */}
@@ -143,6 +149,13 @@ export default function Navbar({ searchQuery, onSearch }) {
                     {link}
                   </button>
                 ))}
+                <Link
+                  to="/ai-tools"
+                  onClick={() => setMobileOpen(false)}
+                  className="col-span-2 px-3 py-2.5 text-sm font-medium text-center text-primary-600 dark:text-primary-400 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
+                >
+                  ✨ AI Tools
+                </Link>
                 </div>
                 <Button size="sm" className="w-full" onClick={handleGetUpdates}>
                   🔔 Get Daily Updates

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import AdminTable, { AdminPageHeader } from '../../components/admin/AdminTable';
 import {
   adminGetInternships,
@@ -8,6 +8,7 @@ import {
   publishInternship,
   draftInternship,
 } from '../../services/internshipService';
+import { parseListResponse } from '../../utils/parseListResponse';
 
 const emptyForm = {
   title: '', company: '', stipend: '', duration: '', location: '',
@@ -22,12 +23,20 @@ export default function InternshipsManagement() {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
+  const requestRef = useRef(0);
 
   const fetchItems = useCallback(() => {
-    adminGetInternships({ page, limit: 10, search }).then(({ data }) => {
-      setItems(data.data);
-      setPagination(data.pagination);
-    });
+    const requestId = ++requestRef.current;
+    adminGetInternships({ page, limit: 10, search })
+      .then((response) => {
+        const parsed = parseListResponse(response, requestId, requestRef.current);
+        if (!parsed) return;
+        setItems(parsed.items);
+        setPagination(parsed.pagination);
+      })
+      .catch(() => {
+        if (requestId !== requestRef.current) return;
+      });
   }, [page, search]);
 
   useEffect(() => { fetchItems(); }, [fetchItems]);

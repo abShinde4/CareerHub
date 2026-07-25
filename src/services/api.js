@@ -1,13 +1,21 @@
 import axios from 'axios';
 
+/** Dev: `/api` via Vite proxy. Production: set VITE_API_URL if needed. */
+export const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || '/api',
+  baseURL: API_BASE_URL,
   headers: { 'Content-Type': 'application/json' },
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('careerhub-admin-token');
-  if (token) config.headers.Authorization = `Bearer ${token}`;
+  if (config.data instanceof FormData) {
+    delete config.headers['Content-Type'];
+  }
+  if (!config.publicRoute) {
+    const token = localStorage.getItem('careerhub-admin-token');
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+  }
   return config;
 });
 
@@ -24,5 +32,12 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+/** Public requests — never attach admin Bearer token. */
+export const publicPost = (url, body, config = {}) =>
+  api.post(url, body, { ...config, publicRoute: true });
+
+export const publicGet = (url, config = {}) =>
+  api.get(url, { ...config, publicRoute: true });
 
 export default api;

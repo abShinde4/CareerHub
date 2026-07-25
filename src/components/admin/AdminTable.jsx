@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import Button from '../ui/Button';
 
 export default function AdminTable({ columns, data, onEdit, onDelete, onPublish, onDraft, onFeature, actions = ['edit', 'delete', 'publish', 'draft'] }) {
@@ -58,16 +59,27 @@ export default function AdminTable({ columns, data, onEdit, onDelete, onPublish,
   );
 }
 
-export function AdminPageHeader({ title, onAdd, search, onSearch }) {
+export function AdminPageHeader({ title, subtitle, onAdd, onSearch }) {
+  const [localSearch, setLocalSearch] = useState('');
+
+  useEffect(() => {
+    if (!onSearch) return undefined;
+    const timer = setTimeout(() => onSearch(localSearch), 300);
+    return () => clearTimeout(timer);
+  }, [localSearch, onSearch]);
+
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-      <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
+        {subtitle && <p className="text-sm text-gray-500 mt-1">{subtitle}</p>}
+      </div>
       <div className="flex gap-3">
         {onSearch && (
           <input
             type="text"
-            value={search}
-            onChange={(e) => onSearch(e.target.value)}
+            value={localSearch}
+            onChange={(e) => setLocalSearch(e.target.value)}
             placeholder="Search..."
             className="px-4 py-2 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500/40"
           />

@@ -7,6 +7,7 @@ const visitorSchema = new mongoose.Schema(
     page: { type: String, required: true },
     country: { type: String, default: 'Unknown' },
     userAgent: { type: String, default: '' },
+    isAdminVisit: { type: Boolean, default: false, index: true },
   },
   { timestamps: true }
 );

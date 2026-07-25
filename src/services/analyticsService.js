@@ -1,4 +1,6 @@
-import api from './api';
+import api, { publicPost } from './api';
 
-export const trackVisit = (page) => api.post('/analytics/track', { page });
+export const trackVisit = (page) =>
+  publicPost('/analytics/track', { page }).then((res) => res.data);
+
 export const getAnalytics = () => api.get('/analytics/admin');

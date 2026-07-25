@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import {
   FiGrid, FiBriefcase, FiUsers, FiSettings, FiLogOut, FiCode,
-  FiMenu, FiX, FiBell, FiImage, FiShare2, FiGlobe, FiBarChart2,
+  FiMenu, FiX, FiBell, FiImage, FiShare2, FiGlobe, FiBarChart2, FiUserCheck,
 } from 'react-icons/fi';
 import { HiOutlineAcademicCap } from 'react-icons/hi2';
 import { useAuth } from '../../context/useAuth';
@@ -17,6 +17,7 @@ const NAV = [
   { to: '/admin/hero-highlights', icon: FiImage, label: 'Hero CMS' },
   { to: '/admin/social-links', icon: FiShare2, label: 'Social Links' },
   { to: '/admin/analytics', icon: FiBarChart2, label: 'Analytics' },
+  { to: '/admin/visitors', icon: FiUserCheck, label: 'Visitors' },
   { to: '/admin/subscribers', icon: FiUsers, label: 'Subscribers' },
   { to: '/admin/settings', icon: FiSettings, label: 'Settings' },
 ];

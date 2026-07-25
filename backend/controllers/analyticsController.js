@@ -1,21 +1,51 @@
 import asyncHandler from '../utils/asyncHandler.js';
 import Visitor from '../models/Visitor.js';
 import { hashIp, detectDevice } from '../utils/hashIp.js';
+import {
+  isAdminRoute,
+  isPublicRoute,
+  isLocalhostRequest,
+  isProductionTrackingEnabled,
+  publicVisitorFilter,
+  hasAdminAuth,
+} from '../utils/analyticsFilter.js';
 
 export const trackVisit = asyncHandler(async (req, res) => {
-  const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress || 'unknown';
-  const { page, country } = req.body;
+  const page = (req.body.page || '/').split('?')[0];
+
+  // Never track in development / localhost
+  if (!isProductionTrackingEnabled() || isLocalhostRequest(req)) {
+    return res.json({ success: true, tracked: false, reason: 'development' });
+  }
+
+  // Never track admin routes or authenticated admin sessions
+  if (isAdminRoute(page) || hasAdminAuth(req) || req.body.isAdminVisit) {
+    return res.json({ success: true, tracked: false, reason: 'admin' });
+  }
+
+  // Only track known public website pages
+  if (!isPublicRoute(page)) {
+    return res.json({ success: true, tracked: false, reason: 'not_public' });
+  }
+
+  const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket.remoteAddress || 'unknown';
   const userAgent = req.headers['user-agent'] || '';
 
   await Visitor.create({
     ipHash: hashIp(ip),
     device: detectDevice(userAgent),
-    page: page || '/',
-    country: country || 'Unknown',
+    page,
+    country: req.body.country || 'Unknown',
     userAgent,
+    isAdminVisit: false,
   });
 
-  res.status(201).json({ success: true });
+  res.status(201).json({ success: true, tracked: true });
+});
+
+const withDateFilter = (dateFilter) => ({
+  ...publicVisitorFilter,
+  ...(dateFilter ? { createdAt: dateFilter } : {}),
 });
 
 export const getAnalytics = asyncHandler(async (req, res) => {
@@ -26,27 +56,30 @@ export const getAnalytics = asyncHandler(async (req, res) => {
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
   const [total, today, weekly, monthly, uniqueVisitors, topPages, deviceStats, countryStats, dailyVisits] = await Promise.all([
-    Visitor.countDocuments(),
-    Visitor.countDocuments({ createdAt: { $gte: startOfDay } }),
-    Visitor.countDocuments({ createdAt: { $gte: startOfWeek } }),
-    Visitor.countDocuments({ createdAt: { $gte: startOfMonth } }),
-    Visitor.distinct('ipHash'),
+    Visitor.countDocuments(publicVisitorFilter),
+    Visitor.countDocuments(withDateFilter({ $gte: startOfDay })),
+    Visitor.countDocuments(withDateFilter({ $gte: startOfWeek })),
+    Visitor.countDocuments(withDateFilter({ $gte: startOfMonth })),
+    Visitor.distinct('ipHash', publicVisitorFilter),
     Visitor.aggregate([
+      { $match: publicVisitorFilter },
       { $group: { _id: '$page', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
       { $limit: 10 },
     ]),
     Visitor.aggregate([
+      { $match: publicVisitorFilter },
       { $group: { _id: '$device', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
     ]),
     Visitor.aggregate([
+      { $match: publicVisitorFilter },
       { $group: { _id: '$country', count: { $sum: 1 } } },
       { $sort: { count: -1 } },
       { $limit: 10 },
     ]),
     Visitor.aggregate([
-      { $match: { createdAt: { $gte: startOfWeek } } },
+      { $match: withDateFilter({ $gte: startOfWeek }) },
       {
         $group: {
           _id: { $dateToString: { format: '%Y-%m-%d', date: '$createdAt' } },

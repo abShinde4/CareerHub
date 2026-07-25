@@ -28,6 +28,8 @@ for (const envPath of envPaths) {
 
 if (loadedFrom) {
   console.log(`Environment loaded from: ${loadedFrom}`);
+  console.log('ENV KEY:', process.env.GEMINI_API_KEY ? `set (${process.env.GEMINI_API_KEY.length} chars)` : undefined);
+  console.log('ENV MODEL:', process.env.GEMINI_MODEL || undefined);
 } else {
   console.warn('No .env file found.');
   console.warn(`Create backend/.env (copy from backend/.env.example)`);

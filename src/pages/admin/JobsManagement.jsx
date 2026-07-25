@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import AdminTable, { AdminPageHeader } from '../../components/admin/AdminTable';
 import {
   adminGetJobs,
@@ -9,6 +9,7 @@ import {
   draftJob,
   toggleFeaturedJob,
 } from '../../services/jobService';
+import { parseListResponse } from '../../utils/parseListResponse';
 
 const CATEGORIES = ['full-time', 'internship', 'wfh', 'hackathon', 'fresher', 'part-time', 'government'];
 
@@ -25,12 +26,20 @@ export default function JobsManagement() {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState(null);
+  const requestRef = useRef(0);
 
   const fetchJobs = useCallback(() => {
-    adminGetJobs({ page, limit: 10, search }).then(({ data }) => {
-      setJobs(data.data);
-      setPagination(data.pagination);
-    });
+    const requestId = ++requestRef.current;
+    adminGetJobs({ page, limit: 10, search })
+      .then((response) => {
+        const parsed = parseListResponse(response, requestId, requestRef.current);
+        if (!parsed) return;
+        setJobs(parsed.items);
+        setPagination(parsed.pagination);
+      })
+      .catch(() => {
+        if (requestId !== requestRef.current) return;
+      });
   }, [page, search]);
 
   useEffect(() => { fetchJobs(); }, [fetchJobs]);

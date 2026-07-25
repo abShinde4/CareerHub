@@ -6,6 +6,7 @@ import Subscriber from '../models/Subscriber.js';
 import GovernmentJob from '../models/GovernmentJob.js';
 import Visitor from '../models/Visitor.js';
 import Announcement from '../models/Announcement.js';
+import { publicVisitorFilter } from '../utils/analyticsFilter.js';
 
 export const getDashboardStats = asyncHandler(async (req, res) => {
   const startOfDay = new Date();
@@ -26,9 +27,9 @@ export const getDashboardStats = asyncHandler(async (req, res) => {
     Hackathon.countDocuments(),
     GovernmentJob.countDocuments(),
     Subscriber.countDocuments(),
-    Visitor.countDocuments(),
-    Visitor.countDocuments({ createdAt: { $gte: startOfDay } }),
-    Visitor.distinct('ipHash'),
+    Visitor.countDocuments(publicVisitorFilter),
+    Visitor.countDocuments({ ...publicVisitorFilter, createdAt: { $gte: startOfDay } }),
+    Visitor.distinct('ipHash', publicVisitorFilter),
   ]);
 
   const [recentJobs, recentInternships, recentHackathons, recentGovJobs, recentSubscribers, recentAnnouncements] = await Promise.all([
