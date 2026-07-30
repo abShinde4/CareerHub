@@ -14,8 +14,7 @@ const NAV_LINKS = [
   'Internships',
   'Companies',
   'Hackathons',
-  'Resources',
-  'Blog',
+  
 ];
 
 export default function Navbar({ searchQuery, onSearch }) {
